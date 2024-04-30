@@ -1,4 +1,4 @@
-package web_server.prueba.Web_server;
+package web_server;
 
 import org.springframework.data.repository.CrudRepository;
 

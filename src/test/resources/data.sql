@@ -1,0 +1,1 @@
+INSERT INTO Usuario (ID, NAME, HASH, EMAIL) VALUES (1, 'Seba Mas', 'asd' ,'sebamas1@hotmail.com');
