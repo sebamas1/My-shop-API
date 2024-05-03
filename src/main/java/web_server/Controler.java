@@ -3,13 +3,16 @@ package web_server;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.Optional;
 
-import org.springframework.security.access.prepost.PreAuthorize;
+// import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @RestController
@@ -23,7 +26,7 @@ public class Controler {
         this.repo = repo;
     }
 
-    @PreAuthorize("permitAll()")  
+    //@PreAuthorize("permitAll()")  
     @GetMapping("/{id}")
     private ResponseEntity<String> userExistence(@PathVariable Long id){
         Optional<Usuario> user = repo.findById(id);
@@ -32,19 +35,31 @@ public class Controler {
         } else return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/createuser/name={name}&password={password}&email={email}")
-    private ResponseEntity<String> createUser(@PathVariable String name, @PathVariable String password, @PathVariable String email){
+    @PostMapping("/createuser")
+    private ResponseEntity<String> createUser(@RequestBody String request){
         
-        long id = 1;
-        while(repo.findById(id).isPresent()){
-            id++;
+        //serialice el json en un objeto usuario
+        ObjectMapper objectMapper = new ObjectMapper();
+        Usuario tempUser = null;
+        try {
+            tempUser = objectMapper.readValue(request, Usuario.class);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
 
-        String hashPass = BCrypt.hashpw(password, BCrypt.gensalt());
+        if(tempUser == null){
+            return ResponseEntity.badRequest().build();
+        }
+        
+        String hashPass = BCrypt.hashpw(tempUser.hash(), BCrypt.gensalt());
 
-        Usuario user = new Usuario(id, name, hashPass, email);
-        repo.save(user);
-        return ResponseEntity.ok("Usuario creado");
+        Usuario user;
+
+        try {
+            user = repo.save(new Usuario((null), tempUser.name(), hashPass, tempUser.email()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok("Usuario creado: " + user.name() + "#" + user.id());
     }
-
 }
