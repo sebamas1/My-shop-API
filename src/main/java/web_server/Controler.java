@@ -62,4 +62,13 @@ public class Controler {
         }
         return ResponseEntity.ok("Usuario creado: " + user.name() + "#" + user.id());
     }
+
+    @GetMapping("/delete/{id}")
+    private ResponseEntity<String> deleteUser(@PathVariable Long id){
+        Optional<Usuario> user = repo.findById(id);
+        if(user.isPresent()){
+            repo.deleteById(id);
+            return ResponseEntity.ok("Usuario eliminado: " + user.get().name() + "#" + user.get().id());
+        } else return ResponseEntity.notFound().build();
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.reactive.function.client.WebClient;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -23,7 +24,7 @@ class WebServerApplicationTests {
 			.toEntity(String.class) //la convierte a un objeto de tipo string
 			.block(); //bloquea la ejecucion hasta que se reciba la respuesta
 
-			assertThat(response.getBody().equals("Usuario encontrado"));
+			assertEquals("Usuario encontrado", response.getBody());
 
 
 	}
@@ -50,6 +51,21 @@ class WebServerApplicationTests {
 			.block();
 
 			assertThat(response.getBody()).isNotNull();
-			assertThat(response.getBody().equals("Usuario creado: julia#2"));
+			assertEquals("Usuario creado: julia#1", response.getBody());
+	}
+
+	@SuppressWarnings("null")
+	@Test
+	void deleteUserEndpointTest() {
+	
+		ResponseEntity<String> response = WebClient //crea un cliente web
+			.create("http://localhost:8080/sebas/delete/2") //crea un cliente web con la url del endpoint
+			.get() //hace una peticion get
+			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
+			.retrieve() //recupera la respuesta
+			.toEntity(String.class) //la convierte a un objeto de tipo string
+			.block(); //bloquea la ejecucion hasta que se reciba la respuesta
+
+			assertEquals("Usuario eliminado: Nehemias M#2", response.getBody());
 	}
 }
