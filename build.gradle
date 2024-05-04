@@ -27,6 +27,7 @@ dependencies {
     implementation 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux:2.6.1'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
     }
 
 tasks.named('test') {

@@ -44,23 +44,24 @@ public class Controler {
         try {
             tempUser = objectMapper.readValue(request, Usuario.class);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Bad Json");
         }
 
         if(tempUser == null){
             return ResponseEntity.badRequest().build();
         }
         
-        String hashPass = BCrypt.hashpw(tempUser.hash(), BCrypt.gensalt());
+        String hashPass = BCrypt.hashpw(tempUser.getHash(), BCrypt.gensalt());
 
         Usuario user;
 
         try {
-            user = repo.save(new Usuario((null), tempUser.name(), hashPass, tempUser.email()));
+            user = repo.save(new Usuario((null), tempUser.getName(), hashPass, tempUser.getEmail()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body("User already exists");
         }
-        return ResponseEntity.ok("Usuario creado: " + user.name() + "#" + user.id());
+        return ResponseEntity.ok("Usuario creado: " + user.getName() + "#" + user.getID());
     }
 
     @GetMapping("/delete/{id}")
@@ -68,7 +69,7 @@ public class Controler {
         Optional<Usuario> user = repo.findById(id);
         if(user.isPresent()){
             repo.deleteById(id);
-            return ResponseEntity.ok("Usuario eliminado: " + user.get().name() + "#" + user.get().id());
+            return ResponseEntity.ok("Usuario eliminado: " + user.get().getName() + "#" + user.get().getID());
         } else return ResponseEntity.notFound().build();
     }
 }
