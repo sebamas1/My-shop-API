@@ -31,7 +31,7 @@ public class Controler {
     private ResponseEntity<String> userExistence(@PathVariable Long id){
         Optional<Usuario> user = repo.findById(id);
         if(user.isPresent()){
-            return ResponseEntity.ok("Usuario encontrado");
+            return ResponseEntity.ok("User found");
         } else return ResponseEntity.notFound().build();
     }
 
@@ -51,6 +51,10 @@ public class Controler {
         if(tempUser == null){
             return ResponseEntity.badRequest().build();
         }
+
+        if(repo.findIdByEmail(tempUser.getEmail()) != null){
+            return ResponseEntity.ok().body("Email already exists");
+        }
         
         String hashPass = BCrypt.hashpw(tempUser.getHash(), BCrypt.gensalt());
 
@@ -61,7 +65,7 @@ public class Controler {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("User already exists");
         }
-        return ResponseEntity.ok("Usuario creado: " + user.getName() + "#" + user.getID());
+        return ResponseEntity.ok("Created user: " + user.getName() + "#" + user.getID());
     }
 
     @GetMapping("/delete/{id}")
@@ -69,7 +73,9 @@ public class Controler {
         Optional<Usuario> user = repo.findById(id);
         if(user.isPresent()){
             repo.deleteById(id);
-            return ResponseEntity.ok("Usuario eliminado: " + user.get().getName() + "#" + user.get().getID());
+            return ResponseEntity.ok("User deleted: " + user.get().getName() + "#" + user.get().getID());
         } else return ResponseEntity.notFound().build();
     }
+
+
 }

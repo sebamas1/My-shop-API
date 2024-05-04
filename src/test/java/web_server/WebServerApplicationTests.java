@@ -24,7 +24,7 @@ class WebServerApplicationTests {
 			.toEntity(String.class) //la convierte a un objeto de tipo string
 			.block(); //bloquea la ejecucion hasta que se reciba la respuesta
 
-			assertEquals("Usuario encontrado", response.getBody());
+			assertEquals("User found", response.getBody());
 
 
 	}
@@ -41,8 +41,8 @@ class WebServerApplicationTests {
 		}
 				""";
 
-		ResponseEntity<String> response = WebClient //crea un cliente web
-			.create("http://localhost:8080/sebas/createuser") //crea un cliente web con la url del endpoint
+		ResponseEntity<String> response = WebClient 
+			.create("http://localhost:8080/sebas/createuser")
 			.post()
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.bodyValue(juliaInfo)
@@ -51,21 +51,44 @@ class WebServerApplicationTests {
 			.block();
 
 			assertThat(response.getBody()).isNotNull();
-			assertEquals("Usuario creado: julia#1", response.getBody());
+			assertEquals("Created user: julia#1", response.getBody());
 	}
 
 	@SuppressWarnings("null")
 	@Test
 	void deleteUserEndpointTest() {
 	
-		ResponseEntity<String> response = WebClient //crea un cliente web
-			.create("http://localhost:8080/sebas/delete/2") //crea un cliente web con la url del endpoint
+		ResponseEntity<String> response = WebClient
+			.create("http://localhost:8080/sebas/delete/2") 
 			.get() //hace una peticion get
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve() //recupera la respuesta
 			.toEntity(String.class) //la convierte a un objeto de tipo string
 			.block(); //bloquea la ejecucion hasta que se reciba la respuesta
 
-			assertEquals("Usuario eliminado: Nehemias M#2", response.getBody());
+			assertEquals("User deleted: Nehemias M#2", response.getBody());
+	}
+
+	@Test
+	void shouldNotCreateUserWithExistingEmail() throws Exception{
+
+		String randomInfo = """
+		{
+			"name": "Pedro",
+			"hash": "buldog",
+			"email": "sebamas1@hotmail.com"
+		}
+				""";
+
+			ResponseEntity<String> response = WebClient
+				.create("http://localhost:8080/sebas/createuser")
+				.post()
+				.headers(headers -> headers.setBasicAuth("seba", "abc123"))
+				.bodyValue(randomInfo)
+				.retrieve() //recupera la respuesta
+				.toEntity(String.class) //la convierte a un objeto de tipo string
+				.block();
+
+			assertEquals("Email already exists", response.getBody());
 	}
 }
