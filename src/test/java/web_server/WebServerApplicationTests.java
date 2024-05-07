@@ -14,24 +14,24 @@ class WebServerApplicationTests {
 
 	@SuppressWarnings("null")
 	@Test
-	void userExistenceEndpointTest() {
+	void clientExistenceEndpointTest() {
 	
 		ResponseEntity<String> response = WebClient //crea un cliente web
-			.create("http://localhost:8080/sebas/3") //crea un cliente web con la url del endpoint
+			.create("http://localhost:8080/miShop/3") //crea un cliente web con la url del endpoint
 			.get() //hace una peticion get
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve() //recupera la respuesta
 			.toEntity(String.class) //la convierte a un objeto de tipo string
 			.block(); //bloquea la ejecucion hasta que se reciba la respuesta
 
-			assertEquals("User found", response.getBody());
+			assertEquals("Client found", response.getBody());
 
 
 	}
 
 	@SuppressWarnings("null")	
 	@Test
-	void createUserEndpointTest() throws Exception{
+	void createClientEndpointTest() throws Exception{
 
 		String juliaInfo = """
 		{
@@ -42,7 +42,7 @@ class WebServerApplicationTests {
 				""";
 
 		ResponseEntity<String> response = WebClient 
-			.create("http://localhost:8080/sebas/createuser")
+			.create("http://localhost:8080/miShop/createclient")
 			.post()
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.bodyValue(juliaInfo)
@@ -51,26 +51,26 @@ class WebServerApplicationTests {
 			.block();
 
 			assertThat(response.getBody()).isNotNull();
-			assertEquals("Created user: julia#1", response.getBody());
+			assertEquals("Created client: julia#1", response.getBody());
 	}
 
 	@SuppressWarnings("null")
 	@Test
-	void deleteUserEndpointTest() {
+	void deleteClientEndpointTest() {
 	
 		ResponseEntity<String> response = WebClient
-			.create("http://localhost:8080/sebas/delete/2") 
+			.create("http://localhost:8080/miShop/delete/2") 
 			.get() //hace una peticion get
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve() //recupera la respuesta
 			.toEntity(String.class) //la convierte a un objeto de tipo string
 			.block(); //bloquea la ejecucion hasta que se reciba la respuesta
 
-			assertEquals("User deleted: Nehemias M#2", response.getBody());
+			assertEquals("Client deleted: Nehemias M#2", response.getBody());
 	}
 
 	@Test
-	void shouldNotCreateUserWithExistingEmail() throws Exception{
+	void shouldNotCreateClientWithExistingEmail() throws Exception{
 
 		String randomInfo = """
 		{
@@ -81,7 +81,7 @@ class WebServerApplicationTests {
 				""";
 
 			ResponseEntity<String> response = WebClient
-				.create("http://localhost:8080/sebas/createuser")
+				.create("http://localhost:8080/miShop/createclient")
 				.post()
 				.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 				.bodyValue(randomInfo)

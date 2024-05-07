@@ -19,7 +19,7 @@ class Configuracion {
         SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 http
                                 .authorizeHttpRequests(request -> request
-                                                .requestMatchers("/sebas/**")
+                                                .requestMatchers("/miShop/**")
                                                 .authenticated())
                                 .httpBasic(Customizer.withDefaults())
                                 .csrf(csrf -> csrf.disable());

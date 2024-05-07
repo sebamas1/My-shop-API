@@ -1,4 +1,4 @@
-package web_server;
+package web_server.Repo;
 
 import org.springframework.data.annotation.Id;
 
@@ -10,8 +10,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "Usuario")
-public class Usuario {
+@Table(name = "Client")
+public class Client {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
@@ -22,10 +22,10 @@ public class Usuario {
     @Column(nullable = false, unique = true)
     private String email;
 
-    public Usuario() {
+    public Client() {
     }
 
-    public Usuario(Long id, String name, String hash, String email) {
+    public Client(Long id, String name, String hash, String email) {
         this.id = id;
         this.name = name;
         this.hash = hash;
