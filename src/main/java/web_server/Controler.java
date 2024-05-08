@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -22,16 +23,18 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 public class Controler {
 
 
-    private final ClientRepo repo;
+    private final ClientRepo clientRepo;
+    private final TicketRepo ticketRepo;
 
-    public Controler(ClientRepo repo){
-        this.repo = repo;
+    public Controler(ClientRepo clientRepo, TicketRepo ticketRepo){
+        this.clientRepo = clientRepo;
+        this.ticketRepo = ticketRepo;
     }
 
     //@PreAuthorize("permitAll()")  
     @GetMapping("/{id}")
     private ResponseEntity<String> userExistence(@PathVariable Long id){
-        Optional<Client> user = repo.findById(id);
+        Optional<Client> user = clientRepo.findById(id);
         if(user.isPresent()){
             return ResponseEntity.ok("Client found");
         } else return ResponseEntity.notFound().build();
@@ -54,7 +57,7 @@ public class Controler {
             return ResponseEntity.badRequest().build();
         }
 
-        if(repo.findIdByEmail(tempUser.getEmail()) != null){
+        if(clientRepo.findIdByEmail(tempUser.getEmail()) != null){
             return ResponseEntity.ok().body("Email already exists");
         }
         
@@ -63,7 +66,7 @@ public class Controler {
         Client user;
 
         try {
-            user = repo.save(new Client((null), tempUser.getName(), hashPass, tempUser.getEmail()));
+            user = clientRepo.save(new Client((null), tempUser.getName(), hashPass, tempUser.getEmail()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Client already exists");
         }
@@ -72,12 +75,33 @@ public class Controler {
 
     @GetMapping("/delete/{id}")
     private ResponseEntity<String> deleteUser(@PathVariable Long id){
-        Optional<Client> user = repo.findById(id);
+        if(id == null){
+            return ResponseEntity.badRequest().body("Bad request, id is null");
+        }
+
+        Optional<Client> user = clientRepo.findById(id);
         if(user.isPresent()){
-            repo.deleteById(id);
+            clientRepo.deleteById(id);
             return ResponseEntity.ok("Client deleted: " + user.get().getName() + "#" + user.get().getID());
         } else return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/getTicketList/{id}")
+    private ResponseEntity<String> getTickets(@PathVariable Long id){
+        List<Long> tickets = ticketRepo.findAllTicketsFromClient(id);
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(tickets == null){
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            String jsonResult = objectMapper.writeValueAsString(tickets);
+            return ResponseEntity.ok(jsonResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error serializing tickets");
+        }
+
+    }       
 
 
 }

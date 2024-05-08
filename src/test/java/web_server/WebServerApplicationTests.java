@@ -59,14 +59,14 @@ class WebServerApplicationTests {
 	void deleteClientEndpointTest() {
 	
 		ResponseEntity<String> response = WebClient
-			.create("http://localhost:8080/miShop/delete/2") 
+			.create("http://localhost:8080/miShop/delete/4") 
 			.get() //hace una peticion get
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve() //recupera la respuesta
 			.toEntity(String.class) //la convierte a un objeto de tipo string
 			.block(); //bloquea la ejecucion hasta que se reciba la respuesta
 
-			assertEquals("Client deleted: Nehemias M#2", response.getBody());
+			assertEquals("Client deleted: Pedro#4", response.getBody());
 	}
 
 	@Test
@@ -91,4 +91,18 @@ class WebServerApplicationTests {
 
 			assertEquals("Email already exists", response.getBody());
 	}
+
+	@Test
+	void shouldReturnListOfTicketsFromClient() {
+	
+		ResponseEntity<String> response = WebClient
+			.create("http://localhost:8080/miShop/getTicketList/2")
+			.get()
+			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
+			.retrieve()
+			.toEntity(String.class)
+			.block();
+
+			assertEquals("[1,3]", response.getBody());
+		}
 }
