@@ -25,13 +25,13 @@ public class Controler {
 
     private final ClientRepo clientRepo;
     private final TicketRepo ticketRepo;
-    private final ProductRepo productRepo;
+    //private final ProductRepo productRepo;
     private final ProductTicketRepo productTicketRepo;
 
-    public Controler(ClientRepo clientRepo, TicketRepo ticketRepo, ProductRepo productRepo, ProductTicketRepo productTicketRepo){
+    public Controler(ClientRepo clientRepo, TicketRepo ticketRepo, ProductTicketRepo productTicketRepo){
         this.clientRepo = clientRepo;
         this.ticketRepo = ticketRepo;
-        this.productRepo = productRepo;
+        // this.productRepo = productRepo;
         this.productTicketRepo = productTicketRepo;
     }
 

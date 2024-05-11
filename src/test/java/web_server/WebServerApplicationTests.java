@@ -117,6 +117,6 @@ class WebServerApplicationTests {
 			.toEntity(String.class)
 			.block();
 
-			assertEquals("[\"Coca cola\",\"Papas fritas\",\"Hamburguesa\"]", response.getBody());
+			assertEquals("[\"Coca Cola\",\"Papas Fritas\",\"Hamburguesa\"]", response.getBody());
 		}
 }
