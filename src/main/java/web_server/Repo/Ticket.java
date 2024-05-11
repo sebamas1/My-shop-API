@@ -18,7 +18,7 @@ public class Ticket {
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Client.class)
     @Column(nullable = false, unique = false)
     private Long client_id;
 
@@ -29,12 +29,12 @@ public class Ticket {
     private Time ticket_time;
 
     @Column(nullable = false, unique = false)
-    private int ticket_price;
+    private float ticket_price;
 
     public Ticket() {
     }
 
-    public Ticket(Long id, Long client_id, Date ticket_date, Time ticket_time, int ticket_price) {
+    public Ticket(Long id, Long client_id, Date ticket_date, Time ticket_time, float ticket_price) {
         this.id = id;
         this.client_id = client_id;
         this.ticket_date = ticket_date;

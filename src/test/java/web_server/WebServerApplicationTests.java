@@ -105,4 +105,18 @@ class WebServerApplicationTests {
 
 			assertEquals("[1,3]", response.getBody());
 		}
+
+	@Test
+	void shouldReturnListOfProducts() {
+	
+		ResponseEntity<String> response = WebClient
+			.create("http://localhost:8080/miShop/getProductListFromTicket/1")
+			.get()
+			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
+			.retrieve()
+			.toEntity(String.class)
+			.block();
+
+			assertEquals("[\"Coca cola\",\"Papas fritas\",\"Hamburguesa\"]", response.getBody());
+		}
 }

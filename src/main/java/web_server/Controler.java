@@ -25,10 +25,14 @@ public class Controler {
 
     private final ClientRepo clientRepo;
     private final TicketRepo ticketRepo;
+    private final ProductRepo productRepo;
+    private final ProductTicketRepo productTicketRepo;
 
-    public Controler(ClientRepo clientRepo, TicketRepo ticketRepo){
+    public Controler(ClientRepo clientRepo, TicketRepo ticketRepo, ProductRepo productRepo, ProductTicketRepo productTicketRepo){
         this.clientRepo = clientRepo;
         this.ticketRepo = ticketRepo;
+        this.productRepo = productRepo;
+        this.productTicketRepo = productTicketRepo;
     }
 
     //@PreAuthorize("permitAll()")  
@@ -100,8 +104,24 @@ public class Controler {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Error serializing tickets");
         }
-
     }       
+
+    @GetMapping("/getProductListFromTicket/{id}")
+    private ResponseEntity<String> getProducts(@PathVariable Long id){
+        List<String> products = productTicketRepo.findAllProductsFromTicket(id);
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(products == null){
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            String jsonResult = objectMapper.writeValueAsString(products);
+            return ResponseEntity.ok(jsonResult);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Error serializing products");
+        }
+
+    }
 
 
 }
