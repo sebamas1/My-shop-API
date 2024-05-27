@@ -17,7 +17,7 @@ class WebServerApplicationTests {
 	void clientExistenceEndpointTest() {
 	
 		ResponseEntity<String> response = WebClient //crea un cliente web
-			.create("http://localhost:8080/miShop/3") //crea un cliente web con la url del endpoint
+			.create("http://localhost:3000/miShop/3") //crea un cliente web con la url del endpoint
 			.get() //hace una peticion get
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve() //recupera la respuesta
@@ -42,7 +42,7 @@ class WebServerApplicationTests {
 				""";
 
 		ResponseEntity<String> response = WebClient 
-			.create("http://localhost:8080/miShop/createclient")
+			.create("http://localhost:3000/miShop/createclient")
 			.post()
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.bodyValue(juliaInfo)
@@ -59,7 +59,7 @@ class WebServerApplicationTests {
 	void deleteClientEndpointTest() {
 	
 		ResponseEntity<String> response = WebClient
-			.create("http://localhost:8080/miShop/delete/4") 
+			.create("http://localhost:3000/miShop/delete/4") 
 			.get() //hace una peticion get
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve() //recupera la respuesta
@@ -81,7 +81,7 @@ class WebServerApplicationTests {
 				""";
 
 			ResponseEntity<String> response = WebClient
-				.create("http://localhost:8080/miShop/createclient")
+				.create("http://localhost:3000/miShop/createclient")
 				.post()
 				.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 				.bodyValue(randomInfo)
@@ -96,7 +96,7 @@ class WebServerApplicationTests {
 	void shouldReturnListOfTicketsFromClient() {
 	
 		ResponseEntity<String> response = WebClient
-			.create("http://localhost:8080/miShop/getTicketList/2")
+			.create("http://localhost:3000/miShop/getTicketList/2")
 			.get()
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve()
@@ -110,7 +110,7 @@ class WebServerApplicationTests {
 	void shouldReturnListOfProducts() {
 	
 		ResponseEntity<String> response = WebClient
-			.create("http://localhost:8080/miShop/getProductListFromTicket/1")
+			.create("http://localhost:3000/miShop/getProductListFromTicket/1")
 			.get()
 			.headers(headers -> headers.setBasicAuth("seba", "abc123"))
 			.retrieve()
